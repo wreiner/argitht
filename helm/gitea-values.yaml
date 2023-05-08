@@ -1,0 +1,37 @@
+---
+gitea:
+  image:
+    rootless: true
+
+  containerSecurityContext:
+    capabilities:
+      drop:
+        - ALL
+    runAsGroup: 1000
+    runAsNonRoot: true
+    runAsUser: 1000
+
+  service:
+    ssh:
+      port: 2222
+
+  persistence:
+    enabled: true
+    size: 2Gi
+    annotations:
+      "helm.sh/resource-policy": keep
+
+  gitea:
+    admin:
+      existingSecret: gitea-admin-secret
+      username: gitea_admin
+      email: "gitea@local.domain"
+    config:
+      server:
+        START_SSH_SERVER: true
+        SSH_DOMAIN: "obscure.test.com"
+        SSH_PORT: 2222
+        SSH_LISTEN_PORT: 2222
+      repository:
+        DEFAULT_BRANCH: main
+        ENABLE_PUSH_CREATE_USER: true
