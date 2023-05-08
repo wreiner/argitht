@@ -1,0 +1,23 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: giteademo
+  annotations:
+    avp.kubernetes.io/path: "argocd/secrets/data/gitea"
+spec:
+  destination:
+    namespace: gitea
+    server: https://kubernetes.default.svc
+  project: default
+  source:
+    path: helm
+    repoURL: https://github.com/wreiner/argitht.git
+    targetRevision: main
+    plugin:
+      env:
+        - name: HELM_VALUES
+          value: |
+            gitea:
+              config:
+                APP_NAME: "<gitea_app_name>"
